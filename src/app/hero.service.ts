@@ -24,7 +24,7 @@ export class HeroService {
     })
   }
 
-  getHero(id: number): Promise<Hero> {
+getHero(id: number): Promise<Hero> {
     const url = `${this.heroesUrl}/${id}`;
     return this.http.get(url)
     .toPromise()
@@ -32,7 +32,7 @@ export class HeroService {
     .catch(this.handleError);
   }
   private heroesUrl = 'api/heroes' //URL to web api
-  
+
   private headers = new Headers({'Content-Type': 'application/json'});
 
   update(hero: Hero): Promise<Hero> {
@@ -43,6 +43,14 @@ export class HeroService {
     .then(()=> hero)
     .catch(this.handleError);
   }
+
+  create(name: string): Promise<Hero> {
+    return this.http
+    .post(this.heroesUrl, JSON.stringify({name:name}), {headers: this.headers})
+    .toPromise()
+    .then(res => res.json().data as Hero)
+  }
+  
   private handleError(error: any): Promise<any> {
     console.error('An error occured', error); // for demo purposes only
     return Promise.reject(error.message || error);
